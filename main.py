@@ -52,6 +52,8 @@ def load_custom_font(size):
 
 gameover_font = load_custom_font(72)
 small_font = load_custom_font(28)
+score_font = load_custom_font(36)
+
 # ========================================
 
 # Текущая тема
@@ -322,6 +324,39 @@ def draw():
         else:
             if sprites['body']:
                 screen.blit(sprites['body'], (x, y))
+
+    # ========== ВЫВОД СЧЕТА В ПРАВОМ НИЖНЕМ УГЛУ ==========
+    score = len(snake) - 3
+    
+    # Создаем текст счета
+    score_text = score_font.render(f"{score}", True, (255, 255, 255))
+    score_rect = score_text.get_rect()
+    
+    # Позиция в правом нижнем углу с отступом
+    margin = 20
+    score_rect.bottomright = (WIDTH - margin, HEIGHT - margin)
+    
+    # Полупрозрачный фон для счета (чтобы было видно на любом фоне)
+    padding = 10
+    bg_rect = pygame.Rect(
+        score_rect.left - padding,
+        score_rect.top - padding,
+        score_rect.width + padding * 2,
+        score_rect.height + padding * 2
+    )
+    
+    # Рисуем полупрозрачный фон
+    s = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
+    s.fill((0, 0, 0, 180))
+    screen.blit(s, (bg_rect.x, bg_rect.y))
+    
+    # Рисуем рамку вокруг счета
+    pygame.draw.rect(screen, (100, 100, 100), bg_rect, 2, border_radius=8)
+    
+    # Выводим счет
+    screen.blit(score_text, score_rect)
+    
+    # ========== КОНЕЦ ВЫВОДА СЧЕТА ==========
     
     pygame.display.flip()
     update_head_state()
